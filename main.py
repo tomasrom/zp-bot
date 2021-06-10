@@ -10,27 +10,27 @@ def no_vistos(links):
 
 
 def main():
-    argenprop = Parser(
-            website='https://www.argenprop.com/departamento-alquiler-localidad-capital-federal', # noqa
-            soup_tag='a',
-            next_page='-pagina-',
-            starts_with='/departamento-en-alquiler',
-            page_limit=10,
-            )
-    no_vistos(argenprop.extract_links())
-    # for testing :
-    # links = argenprop.extract_links()
-    # print(links)
+
+    return 0
 
 
-main()
+# uncomment for test with the interactive shell ( python -i main.py ):
+
+meliprops = Parser(
+    website='https://inmuebles.mercadolibre.com.ar/departamentos/alquiler/capital-federal', # noqa
+    soup_tag='a',
+    next_page_path='/_Desde_',
+    starts_with='https://departamento.mercadolibre.com.ar/MLA',
+    page_limit=3,
+    next_page_index=48,
+)
 
 
-# uncomment for test with the interactive shell ( python -i main.py )
-# argenprop = Parser(
-#                website='https://www.argenprop.com/departamento-alquiler-localidad-capital-federal', # noqa
-#                soup_tag='a',
-#                next_page='-pagina-',
-#                starts_with='/departamento-en-alquiler',
-#                page_limit=2,
-#            )
+argenprop = Parser(
+    website='https://www.argenprop.com/departamento-alquiler-localidad-capital-federal', # noqa
+    soup_tag='a',
+    next_page_path='-pagina-',
+    starts_with='/departamento-en-alquiler',
+    page_limit=2,
+    next_page_index=1,
+)
