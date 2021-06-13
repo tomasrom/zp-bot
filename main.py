@@ -1,4 +1,4 @@
-from parser import Parser
+from parser import Parser, Parser_Zonaprops
 
 
 def visto(link):

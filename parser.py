@@ -52,3 +52,40 @@ class Parser:
                 except: # noqa
                     pass
 
+
+@dataclass
+class Parser_Zonaprops:
+    website: str
+    soup_tag: str  # html tag to extract links
+    page_limit: int = 5  # default limit page to search
+    zona: str = 'capital-federal.html'
+    next_page_tag: str = '-pagina-'
+
+    def url_search_list(self):
+        pages = [self.website + '-q-' + self.zona]
+        i = 2
+        while i < self.page_limit:
+            page = (self.website + self.next_page_tag + str(i) + '-q-' + self.zona) # noqa
+            pages.append(page)
+            i += 1
+        return pages
+
+    def extract_links(self):
+        data = {}
+        data['link_list'] = []
+        pages = self.url_search_list()
+
+        for url in pages:
+            print('parsing ', url)
+            page = requests.get(url)
+            soup = BeautifulSoup(page.text, 'html.parser')
+            # get all the links from the page in <soup_tag /> tags
+            links = soup.find_all('div') # noqa
+            print(links)
+            print("flag")
+            # for link in links:
+            #    current_url = link
+            #    try:
+            #        print(current_url)
+            #    except: # noqa
+            #        pass
