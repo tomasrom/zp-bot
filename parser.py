@@ -13,6 +13,15 @@ class Parser:
     page_limit: int = 5  # default limit page to search
     next_page_index: int = 1
 
+    def get_link_data(self, link):
+        page = requests.get(link)
+        soup = BeautifulSoup(page.text, 'html.parser')
+        # This is currently working on MeliProps only
+        # Need refactor for argenprops
+        price = soup.find('span', class_='price-tag-fraction').get_text()
+        coin = soup.find('span', class_='price-tag-symbol').get_text()
+        return [coin, price]
+
     def url_search_list(self):
         next_pages = [self.website]
         # refactor names
@@ -38,19 +47,22 @@ class Parser:
             soup = BeautifulSoup(page.text, 'html.parser')
             # get all the links from the page in <soup_tag /> tags
             links = soup.find_all(self.soup_tag)
-            outfile = open('data.txt', 'w')
+            outfile = open('data.json', 'w')
+            dict1 = {}
             for link in links:
                 current_url = link.get('href')
                 try:
                     if current_url.startswith(self.starts_with):
-                        data['link_list'].append({
-                            'id': hash(current_url),  # noqa The id will allow us know if we have already seen this link 
-                            'url': current_url,
-                        })
+                        link_data = self.get_link_data(current_url)
+                        dict1[hash(current_url)] = {
+                                'url': current_url,
+                                'coin': link_data[0],
+                                'price': link_data[1],
+                                }
                         print("--", current_url)
-                        json.dump(data, outfile)
                 except: # noqa
                     pass
+            json.dump(dict1, outfile)
 
 
 @dataclass
